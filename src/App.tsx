@@ -1,3 +1,5 @@
+import { useState } from "react";
+import Select from "react-select";
 import { CardCategory } from "./components/CardCategory";
 import categories from "./productsCategory.json";
 
@@ -23,34 +25,83 @@ export interface Node {
   category: Category;
 }
 
-type NameCategories =
-  | "no-filter"
-  | "Talco"
-  | "Aerosol"
-  | "Barra"
-  | "Alcohol en Aerosol"
-  | "Alcohol en Gel"
-  | "Alcohol en Spray"
-  | "Jabón Barra"
-  | "Jabón Líquido";
+interface Option {
+  label: string;
+  value: string;
+}
 
-const { data } = categories;
-const nodes: Node[] = data.nodes;
+const categoriesNames = [
+  "Talco",
+  "Aerosol",
+  "Barra",
+  "Alcohol en Aerosol",
+  "Alcohol en Gel",
+  "Alcohol en Spray",
+  "Jabón Barra",
+  "Jabón Líquido",
+];
+
+const categoriesOptions = categoriesNames.map((categoryName) => ({
+  value: categoryName,
+  label: categoryName,
+}));
 
 export function App() {
+  const { data } = categories;
+  const products: Node[] = data.nodes;
+
+  const [categorySelected, setCategorySelected] = useState<Option | null>(null);
+
+  const productsFilteredByCategory = products.filter((product) => {
+    return product.category.name === categorySelected?.value ? product : null;
+  });
+
+  function handleSelectCategory(categoryOption: Option | null) {
+    setCategorySelected(categoryOption);
+  }
+
   return (
     <div>
-      <div className="w-full max-w-[1120px] mt-8  mx-auto flex flex-wrap sm:grid grid-cols-3 gap-8">
-        {nodes.map((node) => {
-          return (
-            <CardCategory
-              key={node.id}
-              title={node.name}
-              description={node.shortDescription}
-              image={node.images}
-            />
-          );
-        })}
+      <div className="p-8 w-full max-w-[1120px] mx-auto">
+        <header className="text-center">
+          <h1 className="font-bold text-3xl text-gray-100">
+            The Brooklyn Brothers
+          </h1>
+        </header>
+
+        <div className="mt-8 mb-6">
+          <Select
+            isClearable
+            options={categoriesOptions}
+            value={categorySelected}
+            onChange={(option) => handleSelectCategory(option)}
+            placeholder="Buscar por categoria"
+          />
+        </div>
+
+        <div className="flex flex-wrap sm:grid grid-cols-3 gap-8">
+          {categorySelected
+            ? productsFilteredByCategory.map((product) => {
+                return (
+                  <CardCategory
+                    key={product.id}
+                    title={product.name}
+                    description={product.shortDescription}
+                    image={product.images}
+                  />
+                );
+              })
+            : products.map((node) => {
+                return (
+                  <CardCategory
+                    key={node.id}
+                    title={node.name}
+                    description={node.shortDescription}
+                    image={node.images}
+                  />
+                );
+              })}
+        </div>
       </div>
     </div>
   );

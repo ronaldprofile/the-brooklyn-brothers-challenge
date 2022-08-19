@@ -3,8 +3,9 @@
 @tailwind utilities;
 
 body {
-  background: #202024;
-  color: #fafafa;
+  @apply bg-gray-800 font-roboto
+}
 
-  @apply font-roboto
+.react-select__control {
+  @apply bg-gray-600 border-zinc-700
 }
