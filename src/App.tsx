@@ -74,7 +74,7 @@ export function App() {
             isClearable
             options={categoriesOptions}
             value={categorySelected}
-            onChange={(option: Option) => handleSelectCategory(option)}
+            onChange={(option) => handleSelectCategory(option)}
             placeholder="Buscar por categoria"
           />
         </div>
