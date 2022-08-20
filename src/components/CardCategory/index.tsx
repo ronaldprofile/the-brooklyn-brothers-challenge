@@ -20,7 +20,7 @@ export function CardCategory({ title, description, image }: CardCategoryProps) {
       <p className="my-4">{description}</p>
 
       {image.map((image) => (
-        <img src={image.asset.url} alt={image.alt} />
+        <img src={image.asset.url} alt={image.alt} loading="lazy" />
       ))}
     </div>
   );
